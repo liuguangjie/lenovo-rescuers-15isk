@@ -95,8 +95,6 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
                 Method (_PLD, 0, NotSerialized)  // _PLD: Physical Location of Device
                 {
                     Return (\_SB.PCI0.XHC.RHUB.TPLD)
-                    One
-                    One
                 }
             }
 

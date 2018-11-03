@@ -11363,10 +11363,6 @@ DefinitionBlock ("", "DSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
                 If (CondRefOf (\_SB.PCI0.SAT0.SDSM))
                 {
                     Return (SDSM)
-                    Arg0
-                    Arg1
-                    Arg2
-                    Arg3
                 }
 
                 Return (Zero)

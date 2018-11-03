@@ -1528,24 +1528,25 @@ DefinitionBlock ("", "SSDT", 1, "LENOVO", "CB-01   ", 0x00000001)
                             Store (MCHH, MMCH)
                         }
                     }
-
-                    Store (PCAP, \_PR.CPU0._PPC ())
+                    //1532, 6058, Invalid type (Target is [Package], Source must be a package also)
+                    
+                    //Store (PCAP, \_PR.CPU0._PPC ())
                     Notify (\_PR.CPU0, 0x80)
                     If (CondRefOf (\_PR.CPU1._PPC, Local0))
                     {
-                        Store (PCAP, \_PR.CPU1._PPC ())
+                        //Store (PCAP, \_PR.CPU1._PPC ())
                         Notify (\_PR.CPU1, 0x80)
                     }
 
                     If (CondRefOf (\_PR.CPU2._PPC, Local0))
                     {
-                        Store (PCAP, \_PR.CPU2._PPC ())
+                        //Store (PCAP, \_PR.CPU2._PPC ())
                         Notify (\_PR.CPU2, 0x80)
                     }
 
                     If (CondRefOf (\_PR.CPU3._PPC, Local0))
                     {
-                        Store (PCAP, \_PR.CPU3._PPC ())
+                        //Store (PCAP, \_PR.CPU3._PPC ())
                         Notify (\_PR.CPU3, 0x80)
                     }
 
