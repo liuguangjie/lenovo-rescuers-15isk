@@ -137,7 +137,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
             SMST,   8, 
             SMAD,   8, 
             SMCM,   8, 
-            SMD0,   256, 
+            SMDX,256,//SMD0,256, 
             BCNT,   8, 
             SMAL,   8, 
             SMA0,   8, 
@@ -210,15 +210,15 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
             Offset (0x5E), 
             TMPC,   8, 
             Offset (0x60), 
-            B1CH,   32, 
+            BC0H,8,BC1H,8,BC2H,8,BC3H,8, 
             B2CH,   32, 
             B1MO,   16, 
             B2MO,   16, 
             B1SN,   16, 
             B2SN,   16, 
-            B1DT,   16, 
+            BDT0,8,BDT1,8, 
             B2DT,   16, 
-            B1CY,   16, 
+            BCY0,8,BCY1,8, 
             FUSL,   8, 
             FUSH,   8, 
             BMIL,   8, 
@@ -253,16 +253,16 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
             TPTY,   3, 
             Offset (0x8C), 
             Offset (0x8F), 
-            B1MA,   64, 
+            BXMA,64,//B1MA,64, 
             Offset (0x98), 
-            B2MA,   64, 
+            BYMA,64,//B2MA,64, 
             Offset (0xA2), 
             Offset (0xA4), 
             Offset (0xA6), 
             B2CV,   16, 
             Offset (0xAA), 
-            RTEP,   16, 
-            BET2,   16, 
+            RTP0,8,PTP1,8, 
+            B0ET,8,B1ET,8, 
             Offset (0xB0), 
             CPUT,   8, 
             Offset (0xB2), 
@@ -270,8 +270,8 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
             Offset (0xB4), 
             GPUT,   8, 
             Offset (0xB6), 
-            B1TM,   16, 
-            BAPV,   16, 
+            BTM0,8,BTM1,8, 
+            B0PV,8,B1PV,8, 
             Offset (0xBC), 
             B1CV,   16, 
             Offset (0xC1), 
@@ -279,14 +279,14 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
             B1IC,   1, 
             BATN,   1, 
             Offset (0xC2), 
-            BARC,   16, 
-            BADC,   16, 
-            BADV,   16, 
+            BAC0,8,BAC1,8, 
+            BDC0,8,BDC1,8, 
+            BDV0,8,BDV1,8, 
             BDCW,   16, 
             BDCL,   16, 
-            BAFC,   16, 
+            BFC0,8,BFC1,8, 
             BAPR,   16, 
-            B1CR,   16, 
+            BCR0,8,BCR1,8, 
             B1AR,   16, 
             Offset (0xE0), 
             LUX1,   8, 
@@ -316,7 +316,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
             BCG2,   16
         }
 
-        Mutex (BATM, 0x07)
+        Mutex(BATM, 0)
         Device (BAT1)
         {
             Name (_HID, EisaId ("PNP0C0A"))  // _HID: Hardware ID
@@ -386,19 +386,19 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
                 })
                 If (ECA2)
                 {
-                    Store (BAFC, Local0)
+                    Store (B1B2(BFC0,BFC1), Local0)
                     If (Local0)
                     {
-                        Store (BADC, Index (BPKG, One))
+                        Store (B1B2(BDC0,BDC1), Index (BPKG, One))
                         Store (Local0, Index (BPKG, 0x02))
-                        Store (BADV, Index (BPKG, 0x04))
+                        Store (B1B2(BDV0,BDV1), Index (BPKG, 0x04))
                         Divide (Local0, 0x0A, Local1, Local2)
                         Store (Local2, Index (BPKG, 0x05))
                         Divide (Local0, 0x14, Local1, Local2)
                         Store (Local2, Index (BPKG, 0x06))
-                        Store (BADC, Index (BPKH, One))
+                        Store (B1B2(BDC0,BDC1), Index (BPKH, One))
                         Store (Local0, Index (BPKH, 0x02))
-                        Store (BADV, Index (BPKH, 0x04))
+                        Store (B1B2(BDV0,BDV1), Index (BPKH, 0x04))
                         Divide (Local0, 0x0A, Local1, Local2)
                         Store (Local2, Index (BPKH, 0x05))
                         Divide (Local0, 0x14, Local1, Local2)
@@ -406,7 +406,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
                     }
                 }
 
-                If (LEqual (B1CH, 0x0050694C))
+                If (LEqual (B1B4(BC0H,BC1H,BC2H,BC3H), 0x0050694C))
                 {
                     Return (BPKG)
                 }
@@ -453,14 +453,14 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
                     ShiftLeft (B1IC, One, Local0)
                     Or (B1DI, Local0, Local1)
                     Store (Local1, Index (PKG1, Zero))
-                    Store (B1CR, Local2)
+                    Store (B1B2(BCR0,BCR1), Local2)
                     Store (POSW (Local2), Local2)
-                    Store (BAPV, Local3)
+                    Store (B1B2(B0PV,B1PV), Local3)
                     Divide (Local3, 0x03E8, Local4, Local3)
                     Multiply (Local2, Local3, Local2)
                     Store (Local2, Index (PKG1, One))
-                    Store (BARC, Index (PKG1, 0x02))
-                    Store (BAPV, Index (PKG1, 0x03))
+                    Store (B1B2(BAC0,BAC1), Index (PKG1, 0x02))
+                    Store (B1B2(B0PV,B1PV), Index (PKG1, 0x03))
                 }
 
                 Release (BATM)
@@ -801,7 +801,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
                         Store (FB0, Local0)
                         If (LEqual (And (Local0, One), Zero))
                         {
-                            Store (FB4, SMD0)
+                            WECB(0x1C,256,FB4)
                         }
 
                         Store (FB0, SMPR)
@@ -815,7 +815,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
                         Store (FB0, Local0)
                         If (LNotEqual (And (Local0, One), Zero))
                         {
-                            Store (SMD0, FB4)
+                            Store (RECB(0x1C, 256), FB4)
                         }
 
                         Store (SMST, FB1)
@@ -829,7 +829,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
             {
                 If (LEqual (Arg0, Zero))
                 {
-                    Return (BET2)
+                    Return (B1B2(B0ET,B1ET))
                 }
 
                 If (LEqual (Arg0, One))
@@ -879,23 +879,23 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
                 CreateField (BTIF, 0x0140, 0x60, IFMN)
                 CreateField (BTIF, 0x01A0, 0xB8, IFBC)
                 CreateField (BTIF, 0x0258, 0x40, IFBV)
-                Store (Divide (BADC, 0x0A, ), IFDC)
-                Store (Divide (BAFC, 0x0A, ), IFFC)
-                Store (Divide (BARC, 0x0A, ), IFRC)
-                Store (RTEP, IFAT)
-                Store (BET2, IFAF)
-                Store (BAPV, IFVT)
-                Store (B1CR, IFCR)
-                Store (B1TM, IFTP)
-                Store (B1DT, IFMD)
-                Store (B1DT, IFFD)
-                Store (BADV, IFDV)
+                Store (Divide (B1B2(BDC0,BDC1), 0x0A, ), IFDC)
+                Store (Divide (B1B2(BFC0,BFC1), 0x0A, ), IFFC)
+                Store (Divide (B1B2(BAC0,BAC1), 0x0A, ), IFRC)
+                Store (B1B2(RTP0,PTP1), IFAT)
+                Store (B1B2(B0ET,B1ET), IFAF)
+                Store (B1B2(B0PV,B1PV), IFVT)
+                Store (B1B2(BCR0,BCR1), IFCR)
+                Store (B1B2(BTM0,BTM1), IFTP)
+                Store (B1B2(BDT0,BDT1), IFMD)
+                Store (B1B2(BDT0,BDT1), IFFD)
+                Store (B1B2(BDV0,BDV1), IFDV)
                 Store (Zero, IFCH)
-                Store (B1CH, IFCH)
+                Store (B1B4(BC0H,BC1H,BC2H,BC3H), IFCH)
                 Store (Zero, IFDN)
-                Store (B2MA, IFDN)
+                Store (RECB(0x98, 64), IFDN)
                 Store (Zero, IFMN)
-                Store (B1MA, IFMN)
+                Store (RECB(0x8F, 64), IFMN)
                 Store (Zero, IFBC)
                 Store (0x17, BT11)
                 While (BT11)
@@ -953,7 +953,7 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
                          0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 
                     }
                 })
-                Store (B1CY, Index (DerefOf (Index (GBUF, Zero)), Zero))
+                Store (B1B2(BCY0,BCY1), Index (DerefOf (Index (GBUF, Zero)), Zero))
                 Store (Zero, Index (DerefOf (Index (GBUF, One)), Zero))
                 Store (BMIL, Index (DerefOf (Index (GBUF, 0x02)), Zero))
                 Store (BMIH, Index (DerefOf (Index (GBUF, 0x02)), One))
@@ -1076,6 +1076,51 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
             P8XH (Zero, 0x73)
             Notify (\_SB.PCI0.PEG0.PEGP, DSTA)
             Store (Zero, PAIG)
+        }
+        Method (RE1B, 1, NotSerialized)
+        {
+            OperationRegion(ERAM, EmbeddedControl, Arg0, 1)
+            Field(ERAM, ByteAcc, NoLock, Preserve) { BYTE, 8 }
+            Return(BYTE)
+        }
+        Method (RECB, 2, Serialized)
+        // Arg0 - offset in bytes from zero-based
+        // Arg1 - size of buffer in bits
+        {
+            ShiftRight(Arg1, 3, Arg1)
+            Name(TEMP, Buffer(Arg1) { })
+            Add(Arg0, Arg1, Arg1)
+            Store(0, Local0)
+            While (LLess(Arg0, Arg1))
+            {
+                Store(RE1B(Arg0), Index(TEMP, Local0))
+                Increment(Arg0)
+                Increment(Local0)
+            }
+            Return(TEMP)
+        }
+        Method (WE1B, 2, NotSerialized)
+        {
+            OperationRegion(ERAM, EmbeddedControl, Arg0, 1)
+            Field(ERAM, ByteAcc, NoLock, Preserve) { BYTE, 8 }
+            Store(Arg1, BYTE)
+        }
+        Method (WECB, 3, Serialized)
+        // Arg0 - offset in bytes from zero-based EC
+        // Arg1 - size of buffer in bits
+        // Arg2 - value to write
+        {
+            ShiftRight(Arg1, 3, Arg1)
+            Name(TEMP, Buffer(Arg1) { })
+            Store(Arg2, TEMP)
+            Add(Arg0, Arg1, Arg1)
+            Store(0, Local0)
+            While (LLess(Arg0, Arg1))
+            {
+                WE1B(Arg0, DerefOf(Index(TEMP, Local0)))
+                Increment(Arg0)
+                Increment(Local0)
+            }
         }
     }
 
@@ -1609,5 +1654,19 @@ DefinitionBlock ("", "SSDT", 2, "LENOVO", "CB-01   ", 0x00000001)
             Return (GPLD (Zero, 0x12))
         }
     }
+    Method (B1B2, 2, NotSerialized)
+    {
+        Return(Or(Arg0, ShiftLeft(Arg1, 8)))
+    }
+    Method (B1B4, 4, NotSerialized)
+    {
+        Store(Arg3, Local0)
+        Or(Arg2, ShiftLeft(Local0, 8), Local0)
+        Or(Arg1, ShiftLeft(Local0, 8), Local0)
+        Or(Arg0, ShiftLeft(Local0, 8), Local0)
+        Return(Local0)
+    }
+    
+    
 }
 
